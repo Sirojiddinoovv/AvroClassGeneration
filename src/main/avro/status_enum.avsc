@@ -1,0 +1,6 @@
+{
+  "type": "enum",
+  "name": "StatusEnum",
+  "namespace": "uz.nodir.avro",
+  "symbols": ["ACTIVE", "INACTIVE", "BANNED"]
+}

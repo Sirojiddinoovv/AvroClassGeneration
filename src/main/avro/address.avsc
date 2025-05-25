@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "Address",
+  "namespace": "uz.nodir.avro",
+  "fields": [
+    {"name": "country", "type": "string"},
+    {"name": "city", "type": "string"},
+    {"name": "street", "type": "string"},
+    {"name": "zip", "type": ["null", "string"], "default": null}
+  ]
+}

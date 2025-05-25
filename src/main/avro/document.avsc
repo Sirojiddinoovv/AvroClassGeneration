@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "Document",
+  "namespace": "uz.nodir.avro",
+  "fields": [
+    {"name": "type", "type": "string"},
+    {"name": "number", "type": "string"},
+    {"name": "issuedDate", "type": "string"}
+  ]
+}
