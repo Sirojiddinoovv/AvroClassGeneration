@@ -4,6 +4,8 @@ src/main/avro
 А сгенерированные .java классы складывает в:
 build/generated-main-avro-java
 
+Для генерации классов используйте команду clean потом build
+
 setCreateSetters(true) — генерирует setXxx(...) методы для каждого поля.
 
 setFieldVisibility("private") — задаёт видимость полей в сгенерированных классах:
@@ -29,3 +31,8 @@ private Address address;
 private ContactInfo contactInfo;
 private List<Document> documents;
 }
+
+
+
+чтобы зарегистрировать схем надо указать schema-registry url в gradle
+потом использовать команду:  ./gradlew registerSchemas    

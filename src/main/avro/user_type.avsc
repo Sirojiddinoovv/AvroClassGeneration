@@ -1,6 +1,0 @@
-{
-  "type": "enum",
-  "name": "UserTypeEnum",
-  "namespace": "uz.nodir.avro",
-  "symbols": ["INDIVIDUAL", "COMPANY", "ADMIN"]
-}
