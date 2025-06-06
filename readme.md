@@ -1,38 +1,125 @@
-Параметры setSource(...) и setOutputDir(...) больше не используются напрямую в новых версиях плагина com.github.davidmc24.gradle.plugin.avro (начиная с версии 1.2.x и выше). Вместо них плагин автоматически ищет .avsc и .avdl файлы по умолчанию в папке:
-src/main/avro
 
-А сгенерированные .java классы складывает в:
-build/generated-main-avro-java
+# AvroClassGenerator
 
-Для генерации классов используйте команду clean потом build
+Проект на Spring Boot и Kotlin, предназначенный для генерации Java-классов из Avro-схем и работы со Schema Registry.
 
-setCreateSetters(true) — генерирует setXxx(...) методы для каждого поля.
+---
 
-setFieldVisibility("private") — задаёт видимость полей в сгенерированных классах:
+## 📦 Структура проекта
 
-"PUBLIC" — поля будут public.
+- `src/main/avro/` — директория с Avro-схемами (`*.avsc`)
+- `build/generated-main-avro-java/` — путь, куда Gradle плагин сгенерирует Java-классы
+- `src/main/kotlin/` — основная бизнес-логика приложения
+- `src/test/kotlin/` — модульные тесты
 
-"PUBLIC_DEPRECATED" — поля public с аннотацией @Deprecated.
+---
 
-"PRIVATE" — поля будут private, доступ через getter/setter.
+## ⚙️ Используемые технологии
 
-setOutputCharacterEncoding(Charsets.UTF_8) — устанавливает кодировку для сгенерированных файлов.
+- Spring Boot
+- Kotlin
+- Gradle
+- Avro
+- Confluent Schema Registry
+- Gradle Plugin: `com.github.davidmc24.gradle.plugin.avro`
 
-setStringType("String") — определяет тип для строковых полей ("String" или "CharSequence").
+---
 
-setEnableDecimalLogicalType(true) — включает поддержку логического типа decimal.
+## 🛠️ Генерация Avro-классов
 
-пример в java class:
-public class User extends SpecificRecordBase {
-private long id;
-private String fullName;
-private UserTypeEnum type;
-private Address address;
-private ContactInfo contactInfo;
-private List<Document> documents;
+> Плагин автоматически сканирует `src/main/avro` и генерирует `.java` классы в `build/generated-main-avro-java`.
+
+### Шаги:
+
+```bash
+./gradlew clean build
+```
+
+### Пример конфигурации:
+
+```kotlin
+avro {
+    setCreateSetters(true)
+    setFieldVisibility("PRIVATE")
+    setOutputCharacterEncoding(Charsets.UTF_8)
+    setStringType("String")
+    setEnableDecimalLogicalType(true)
 }
+```
 
+---
 
+## 🔁 Работа со Schema Registry
 
-чтобы зарегистрировать схем надо указать schema-registry url в gradle
-потом использовать команду:  ./gradlew registerSchemas    
+Для загрузки и загрузки Avro-схем используйте следующие утилиты от Confluent:
+
+### 🔽 Импорт схемы:
+
+```bash
+curl -X POST http://localhost:8081/subjects/User-value/versions \
+     -H "Content-Type: application/vnd.schemaregistry.v1+json" \
+     -d @src/main/avro/User.avsc
+```
+
+### 🔼 Получение схемы:
+
+```bash
+curl http://localhost:8081/subjects/User-value/versions/latest | jq
+```
+
+---
+
+## 📄 Полезные параметры Avro-плагина (из старого README)
+
+- `setCreateSetters(true)` — генерирует `setXxx(...)` методы.
+- `setFieldVisibility("PRIVATE")` — поля становятся приватными, используются геттеры/сеттеры.
+- `setOutputCharacterEncoding(Charsets.UTF_8)` — кодировка.
+- `setStringType("String")` — тип строк: `"String"` или `"CharSequence"`.
+- `setEnableDecimalLogicalType(true)` — поддержка `decimal`.
+
+---
+
+## 🧪 Тестирование
+
+```bash
+./gradlew test
+```
+
+---
+
+## 🧼 Очистка и пересборка
+
+```bash
+./gradlew clean build
+```
+
+---
+
+## 📂 Пример Avro-схемы
+
+`src/main/avro/User.avsc`:
+
+```json
+{
+  "type": "record",
+  "name": "User",
+  "namespace": "uz.nodir.avro",
+  "fields": [
+    { "name": "name", "type": "string" },
+    { "name": "age", "type": "int" }
+  ]
+}
+```
+
+---
+
+## ℹ️ Заметки
+
+- Schema Registry по умолчанию доступен на `http://localhost:8081`
+- Используйте `jq` для форматирования JSON-ответов (`brew install jq` или `apt install jq`)
+
+---
+
+## 👤 Автор
+
+Нодирбек — Kotlin/Java разработчик с опытом генерации Avro-классов и интеграции с Kafka/Schema Registry.
